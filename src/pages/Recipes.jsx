@@ -1,58 +1,42 @@
-import React, { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useSearch } from "../context/SearchContext";
 import "./Recipes.css";
 
-function Recipes() {
-  const [searchParams] = useSearchParams();
-  const query = searchParams.get("search")
+const Recipes = () => {
+  const { searchTerm, results, setResults } = useSearch();
 
-  const [meals, setMeals] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  const fetchMeals = async ()=>{
-    if (!query) return;
-    setLoading(true)
-    setError(null);
-
-    try{
-      const res = await fetch(
-        `https://www.themealdb.com/api/json/v1/1/search.php?s=${query}`
-      )
-
-      const data = await res.json();
-      setMeals(data.meals || []);
-    } catch (err) {
-      setError("Something went wrong while fetching recipes.");
-    }
-
-    setLoading(false);
-  }
   useEffect(() => {
-    fetchMeals();
-  }, [query]);
+    if (!searchTerm) return;
+
+    fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${searchTerm}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setResults(data.meals || []);
+      });
+  }, [searchTerm]);
+
   return (
     <div className="recipes-page">
-      <h2>Results for: <span>{query}</span></h2>
-      {loading && <p>Loading...</p>}
-      {error && <p>{error}</p>}
-      <div className="recipes-grid">
-        {meals.length > 0 ? (
-          meals.map((meal) => (
+      <h2>Results for: <span className="highlight">{searchTerm}</span></h2>
+
+      {results.length === 0 ? (
+        <p>No recipes found for "{searchTerm}"</p>
+      ) : (
+        <div className="recipe-list">
+          {results.map((meal) => (
             <div key={meal.idMeal} className="recipe-card">
               <img src={meal.strMealThumb} alt={meal.strMeal} />
               <h3>{meal.strMeal}</h3>
+              <p>{meal.strArea} Cuisine</p>
               <a href={meal.strSource || meal.strYoutube} target="_blank" rel="noreferrer">
                 View Recipe
               </a>
             </div>
-          ))
-        ) : !loading ? (
-          <p>No recipes found.</p>
-        ) : null}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default Recipes
+export default Recipes;
