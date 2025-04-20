@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./Home.css"; 
+import { useSearch } from "../context/SearchContext";
+import "./Home.css";
 
 const Home = () => {
   const [query, setQuery] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { setSearchTerm } = useSearch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -16,6 +18,7 @@ const Home = () => {
     }
 
     setError("");
+    setSearchTerm(query);
     navigate(`/recipes?search=${query}`);
     setQuery("");
   };
