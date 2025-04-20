@@ -5,19 +5,27 @@ function About() {
     <div className="about-container">
       <h2>🍽️ About Recipe Finder</h2>
       <p>
-        Recipe Finder is a simple and clean React application that helps you discover delicious recipes based on any ingredient or dish you search for.
+        Recipe Finder is a clean and simple React application that helps users find delicious recipes based on any ingredient or dish name.
       </p>
       <p>
-        It uses <strong>TheMealDB API</strong> to fetch real recipes. This app is built using:
+        This is a <strong>frontend-only</strong> project built using <strong>React.js</strong>. It does not include any backend or server-side processing.
+      </p>
+      <p>
+        The <strong>Contact page</strong> is a simulated form that uses validation and form state management, but <strong>does not actually send any messages</strong> as there's no backend integration.
+      </p>
+      <p>
+        Features of this project:
       </p>
       <ul>
-        <li>⚛️ React + Vite</li>
-        <li>📂 Context API for State Management</li>
-        <li>🔍 API Integration</li>
-        <li>🎨 Custom CSS (Responsive Design)</li>
+        <li>⚛️ Built with React + Vite</li>
+        <li>📂 React Context API for State Management</li>
+        <li>🔍 Integrated with TheMealDB API to fetch real recipes</li>
+        <li>🎨 Responsive and custom CSS styling</li>
+        <li>📄 Multi-page navigation using React Router</li>
+        <li>📝 Form validation (Contact page)</li>
       </ul>
       <p>
-        This project is a part of my end-term submission to demonstrate my frontend development skills with modern React.
+        This project was created as an end-term submission to demonstrate practical skills in modern frontend development using React.
       </p>
     </div>
   );
