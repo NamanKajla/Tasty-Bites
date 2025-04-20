@@ -1,4 +1,5 @@
 // src/pages/Contact.jsx
+import './Contact.css';
 import { useState } from 'react';
 
 function Contact() {
@@ -12,9 +13,9 @@ function Contact() {
 
   const validate = () => {
     const newErrors = {};
-    if (!formData.name) newErrors.name = "Name is required";
-    if (!formData.email) newErrors.email = "Email is required";
-    if (!formData.message) newErrors.message = "Message cannot be empty";
+    if (!formData.name.trim()) newErrors.name = "Name is required";
+    if (!formData.email.trim()) newErrors.email = "Email is required";
+    if (!formData.message.trim()) newErrors.message = "Message cannot be empty";
     return newErrors;
   };
 
@@ -30,38 +31,46 @@ function Contact() {
   };
 
   return (
-    <div className="contact-page">
-      <h2>Contact Us ✉️</h2>
+    <div className="contact-container">
+      <h2>📬 Contact Us</h2>
       {submitted ? (
-        <p>Thank you for your message! 😊</p>
+        <p className="thank-you">Thanks for reaching out! We’ll get back to you soon. 😊</p>
       ) : (
         <form onSubmit={handleSubmit} className="contact-form">
-          <input
-            name="name"
-            placeholder="Your Name"
-            value={formData.name}
-            onChange={handleChange}
-          />
-          {errors.name && <span className="error-text">{errors.name}</span>}
+          <label>
+            Name
+            <input
+              name="name"
+              type="text"
+              value={formData.name}
+              onChange={handleChange}
+            />
+            {errors.name && <span className="error">{errors.name}</span>}
+          </label>
 
-          <input
-            name="email"
-            placeholder="Your Email"
-            value={formData.email}
-            onChange={handleChange}
-          />
-          {errors.email && <span className="error-text">{errors.email}</span>}
+          <label>
+            Email
+            <input
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+            />
+            {errors.email && <span className="error">{errors.email}</span>}
+          </label>
 
-          <textarea
-            name="message"
-            placeholder="Your Message"
-            rows="4"
-            value={formData.message}
-            onChange={handleChange}
-          />
-          {errors.message && <span className="error-text">{errors.message}</span>}
+          <label>
+            Message
+            <textarea
+              name="message"
+              rows="4"
+              value={formData.message}
+              onChange={handleChange}
+            ></textarea>
+            {errors.message && <span className="error">{errors.message}</span>}
+          </label>
 
-          <button type="submit">Send</button>
+          <button type="submit">Send Message</button>
         </form>
       )}
     </div>
