@@ -1,54 +1,61 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSearch } from "../context/SearchContext";
+import "./Home.css";
 
 function Home() {
   const { searchTerm, setSearchTerm, results, setResults } = useSearch();
+  const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleSearch = async () => {
-    if (!searchTerm.trim()) return;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!query.trim()) return;
 
     setLoading(true);
+    setSearchTerm(query);
+
     try {
-      const res = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${searchTerm}`);
+      const res = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${query}`);
       const data = await res.json();
       setResults(data.meals || []);
-    } catch (error) {
-      console.error("Error fetching meals:", error);
+    } catch (err) {
+      console.error("Error fetching meals:", err);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div style={{ padding: "2rem" }}>
-      <h2>Search for a Recipe</h2>
-      <input
-        type="text"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        placeholder="e.g. Pasta"
-        style={{ padding: "0.5rem", marginRight: "0.5rem" }}
-      />
-      <button onClick={handleSearch} style={{ padding: "0.5rem 1rem" }}>Search</button>
+    <div className="home-page">
+      <form onSubmit={handleSubmit} className="search-form">
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search meals like Chicken, Pasta, etc..."
+        />
+        <button type="submit">Search</button>
+      </form>
 
-      <div style={{ marginTop: "2rem" }}>
-        {loading && <p>Loading...</p>}
+      {loading && <p>Loading...</p>}
 
-        {!loading && results.length > 0 && (
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
-            {results.map((meal) => (
-              <div key={meal.idMeal} style={{ width: "200px", border: "1px solid #ccc", padding: "1rem", borderRadius: "8px" }}>
-                <img src={meal.strMealThumb} alt={meal.strMeal} style={{ width: "100%", borderRadius: "4px" }} />
-                <h4 style={{ marginTop: "0.5rem" }}>{meal.strMeal}</h4>
-              </div>
-            ))}
+      <div className="recipe-grid">
+        {results.map((meal) => (
+          <div key={meal.idMeal} className="recipe-card">
+            <img src={meal.strMealThumb} alt={meal.strMeal} />
+            <h4>{meal.strMeal}</h4>
+            <div className="recipe-buttons">
+              <button
+                className="view-btn"
+                onClick={() => navigate(`/recipe/${meal.idMeal}`)}
+              >
+                See Recipe
+              </button>
+            </div>
           </div>
-        )}
-
-        {!loading && results.length === 0 && searchTerm && (
-          <p>No meals found. Try another keyword.</p>
-        )}
+        ))}
       </div>
     </div>
   );
